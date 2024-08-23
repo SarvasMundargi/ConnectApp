@@ -2,14 +2,7 @@ package com.example.connect.screens
 
 import android.content.Intent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,8 +12,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.Role.Companion.Button
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -38,69 +29,86 @@ fun Memes(navHostController: NavHostController) {
         memeViewModel.getUrl()
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-
         when (val state = meme) {
-
             is NetworkResponse.Loading -> {
-                Text("Loading...")
+                Box(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text("Loading...")
+                }
             }
 
             is NetworkResponse.Success -> {
-               // handleData(state.data)
                 val memeData = state.data
-                memeData.url?.let { url ->
-                    // Displaying the meme image
+                memeData.url.let { url ->
+                    // Meme image at the top
                     Image(
                         painter = rememberAsyncImagePainter(model = url),
                         contentDescription = "Meme",
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .padding(bottom = 16.dp),
-                        contentScale = ContentScale.Crop
+                            .fillMaxSize()
+                            .align(Alignment.Center)
+                            .padding(bottom = 16.dp)
                     )
 
-                    // Share button
-                    Button(
-                        onClick = {
-                            val intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                putExtra(Intent.EXTRA_TEXT, url)
-                                type = "text/plain"
-                            }
-                            navHostController.context.startActivity(Intent.createChooser(intent, "Share Meme"))
-                        }
+                    // Buttons at the bottom
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Share")
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // Next button
-                    Button(
-                        onClick = {
-                            memeViewModel.getUrl() // Load next meme
+                        // Share button
+                        Button(
+                            onClick = {
+                                val intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, url)
+                                    type = "text/plain"
+                                }
+                                navHostController.context.startActivity(Intent.createChooser(intent, "Share Meme"))
+                            },
+                            modifier = Modifier.weight(1f) // 50% width
+                        ) {
+                            Text("Share")
                         }
-                    ) {
-                        Text("Next")
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        // Next button
+                        Button(
+                            onClick = {
+                                memeViewModel.getUrl() // Load next meme
+                            },
+                            modifier = Modifier.weight(1f) // 50% width
+                        ) {
+                            Text("Next")
+                        }
                     }
                 } ?: run {
-                    Text("URL is not available")
+                    Box(
+                        modifier = Modifier.align(Alignment.Center)
+                    ) {
+                        Text("URL is not available")
+                    }
                 }
             }
+
             is NetworkResponse.Error -> {
-                Text("Error: ${state.message}")
+                Box(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text("Error: ${state.message}")
+                }
             }
 
-            else -> {null}
+            else -> { /* No-Op */ }
         }
     }
 }
-
