@@ -33,22 +33,21 @@ import com.example.connect.navigation.Routes
 import com.example.connect.utils.SharePref
 import com.example.connect.viewmodel.AddThreadViewModel
 import com.example.connect.viewmodel.UserViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun OtherUsers(navController: NavHostController,uid: String){
     val context= LocalContext.current
-    Log.d("Otherusers id","$uid")
-    val authViewModel: AuthViewModel = viewModel()
+    val authViewModel: AuthViewModel= viewModel()
     val firebaseUser by authViewModel.firebaseUser.observeAsState(null)
 
-    val userViewModel: UserViewModel = viewModel()
+    val userViewModel: UserViewModel= viewModel()
     val threads by userViewModel.threads.observeAsState(null)
     val users by userViewModel.users.observeAsState(null)
 
 
     userViewModel.fetchThreads(uid)
     userViewModel.fetchUser(uid)
+
 
     LaunchedEffect(firebaseUser) {
         if (firebaseUser == null) {
@@ -73,7 +72,7 @@ fun OtherUsers(navController: NavHostController,uid: String){
                 val threadViewModel: AddThreadViewModel = viewModel()
 
                 Text(
-                    text = users!!.name,
+                    text = SharePref.getName(context),
                     style = TextStyle(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 30.sp
@@ -85,7 +84,7 @@ fun OtherUsers(navController: NavHostController,uid: String){
                 )
 
                 Image(
-                    painter = rememberAsyncImagePainter(model = users!!.imageUrl),
+                    painter = rememberAsyncImagePainter(model = SharePref.getImage(context)),
                     contentDescription = "profile picture",
                     modifier = Modifier
                         .size(120.dp)
@@ -97,7 +96,7 @@ fun OtherUsers(navController: NavHostController,uid: String){
                 )
 
                 Text(
-                    text = users!!.username,
+                    text = SharePref.getUserName(context),
                     style = TextStyle(
                         fontSize = 20.sp
                     ),
@@ -108,7 +107,7 @@ fun OtherUsers(navController: NavHostController,uid: String){
                 )
 
                 Text(
-                    text = users!!.bio,
+                    text = SharePref.getBio(context),
                     style = TextStyle(
                         fontSize = 20.sp
                     ),
@@ -139,14 +138,27 @@ fun OtherUsers(navController: NavHostController,uid: String){
                         start.linkTo(parent.start)
                     }
                 )
+
+                ElevatedButton(onClick = {
+                    authViewModel.logout()
+                }, modifier = Modifier
+                    .constrainAs(button){
+                        top.linkTo(following.bottom,margin = 5.dp)
+                        start.linkTo(parent.start)
+                    }){
+                    Text(text = "Logout")
+                }
             }
         }
 
         if(threads!=null && users!=null){
             items(threads?: emptyList()){pair ->
                 ThreadItem(thread = pair, users = users!!, navHostController = navController
-                    , userId = FirebaseAuth.getInstance().currentUser!!.uid)
+                    , userId =SharePref.getUserName(context))
             }
         }
+
     }
+
+
 }

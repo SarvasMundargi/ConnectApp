@@ -60,15 +60,10 @@ fun NavGraph(navController: NavHostController){
             Register(navController)
         }
 
-        composable(Routes.OtherUsers.routes) { backStackEntry ->
-            val userId = backStackEntry.arguments!!.getString("userId")
-            OtherUsers(navController, userId!!)
-//            if (userId != null) {
-//                OtherUsers(navController, userId)
-//            } else {
-//                Log.e("NavGraph", "User ID is null")
-//                navController.popBackStack()
-//            }
+        composable(Routes.OtherUsers.routes) {
+            val data = it.arguments?.getString("data")
+            OtherUsers(navController, data!!)
         }
+
     }
 }

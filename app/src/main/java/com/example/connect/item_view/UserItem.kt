@@ -1,5 +1,6 @@
 package com.example.connect.item_view
 
+import android.text.TextUtils.replace
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -41,8 +43,9 @@ fun UserItem(
                     .fillMaxWidth()
                     .padding(16.dp)
                     .clickable {
-                        val routes = Routes.OtherUsers.routes.replace("{userId}", users.uid)
+                        val routes=Routes.OtherUsers.routes.replace("{data}",users.uid)
                         navHostController.navigate(routes)
+
                     }
             ) {
                 val (userImage, userName, title) = createRefs()
