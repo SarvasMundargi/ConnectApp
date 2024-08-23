@@ -37,8 +37,8 @@ fun BottomNav(navController: NavHostController){
                 Home(navController)
             }
 
-            composable(Routes.Notification.routes){
-                Notification()
+            composable(Routes.Memes.routes){
+                Memes(navController1)
             }
 
             composable(Routes.Search.routes){
@@ -81,7 +81,7 @@ fun MyBottomBar(navController: NavHostController){
 
         BottomNavItem(
             "Notification",
-            Routes.Notification.routes,
+            Routes.Memes.routes,
             Icons.Rounded.Notifications
         ),
 

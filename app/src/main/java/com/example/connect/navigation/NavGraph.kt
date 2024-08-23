@@ -10,7 +10,7 @@ import com.example.connect.screens.AddThreads
 import com.example.connect.screens.BottomNav
 import com.example.connect.screens.Home
 import com.example.connect.screens.Login
-import com.example.connect.screens.Notification
+import com.example.connect.screens.Memes
 import com.example.connect.screens.OtherUsers
 import com.example.connect.screens.Profile
 import com.example.connect.screens.Register
@@ -32,8 +32,8 @@ fun NavGraph(navController: NavHostController){
             Home(navController)
         }
 
-        composable(Routes.Notification.routes){
-            Notification()
+        composable(Routes.Memes.routes){
+            Memes(navController)
         }
 
         composable(Routes.Search.routes){

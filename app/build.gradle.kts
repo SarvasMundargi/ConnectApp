@@ -77,4 +77,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
     implementation ("androidx.compose.runtime:runtime-livedata:1.6.8")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 }
